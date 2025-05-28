@@ -43,3 +43,17 @@ Estruturas de dados no javascript (e outtras linguagens de auto-nível)
 
 
 Valor e Referência
+
+    Foi usado o exemplo de se criar um array com alguns valores e um array que faz referencia ao mesmo e quando se altera o array filho o pai também é alterado...
+
+        array1 = [1, 2, 3]
+        array2 = array1
+
+        array2[0] = 5
+
+        no final: 
+
+        array2 ==> [5, 2, 3]
+        array1 ==> [5, 2, 3]
+
+        percebe-se que alterou o segundo, porém o primeiro também foi alterado, isso acontece pois não foi criada uma nova lista na memória e sim foi feita uma referencia na memória.
