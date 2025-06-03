@@ -1,5 +1,3 @@
-//Estou ajustando ainda....
-
 let opcao
 
 function areaTriangulo(base, altura) {
@@ -24,15 +22,18 @@ function areaCirculo(raio) {
 
 function perguntaMedida(objeto) {
     for (let i = 0; i < objeto.medida.length; i++) {
-        let medidaInformada = parseFloat(prompt("Informe o valor da " + objeto.medida[i] + " do " + objeto.nome))
+        let medidaNome = objeto.medida[i]
+        let medidaInformada = parseFloat(prompt("Informe o valor da " + medidaNome + " do " + objeto.nome))
 
-        if (isNaN(medidaInformada)) {
-                do {
-                    medidaInformada = parseFloat(prompt("Informe o valor da " + objeto.medida[i] + " do " + objeto.nome + " válida:"))
-                } while (isNaN(medidaInformada))
-            }
-        
-        objeto[objeto.medida[i]] = medidaInformada
+        while (isNaN(medidaInformada)) {
+            medidaInformada = parseFloat(prompt("Informe um valor válido para a " + medidaNome + " do " + objeto.nome))
+        }
+
+        let chave = medidaNome.replace("maior base", "baseMaior")
+                              .replace("menor base", "baseMenor")
+                              .replace(" ", "")
+
+        objeto[chave] = medidaInformada
     }
 }
 
@@ -64,19 +65,19 @@ do {
             break
         case "3":
             objeto.nome = "quadrado"
-            objeto.medida = "lado"
+            objeto.medida = ["lado"]
             perguntaMedida(objeto)
             alert("A área do quadrado é igual a: " + areaQuadrado(objeto.lado))
             break
         case "4":
             objeto.nome = "trapézio"
-            objeto.medida = ["maiorBase", "menorBase", "altura"]
+            objeto.medida = ["maior base", "menor base", "altura"]
             perguntaMedida(objeto)
             alert("A área do trapézio é igual a: " + areaTrapezio(objeto.baseMaior, objeto.baseMenor, objeto.altura))
             break
         case "5":
             objeto.nome = "círculo"
-            objeto.medida = "raio"
+            objeto.medida = ["raio"]
             perguntaMedida(objeto)
             alert("A área do círculo é igual a: " + areaCirculo(objeto.raio))
             break
