@@ -1,0 +1,62 @@
+É uma estritira do javascript para se trabalhar com dicionarios chave-valor.
+
+O par chave-valor em um objeto javascript é chamado de propriedade.
+
+    A chave é como um nome da propriedade;
+
+    O valor é o valor que está armazenado nessa propriedade (semelhante aos valores armazenados em variáveis);
+
+Diferente dos arrays, seus elementos não possuem nenhuma sequência.
+
+Uma propriedade também pode ter strings, números e booleanos como chave.
+
+Uma propriedade pode armazenar qualquer tipo de dado como valor.
+
+Pode ser criado através de chaves {}  -o-  let objeto = {}.
+
+Suas propriedades e funções poder ser referenciadas por encadeamento com ponto "." ou colchetes [].
+
+    objeto.prop = "Olá, Mundo!"
+    objeto.executar()
+
+    mas também...
+
+    let name = "prop"
+    objeto[name] = "Olá Mundo!"
+    objeto.prop === objeto[name]
+    let funcao = "executar"
+    objeto[funcao]()
+
+
+Exemplo de Objeto:
+
+const pessoa = {}
+
+pessoa.nome = "João"
+pessoa.idade = 24
+pessoa.colegas = ["Lucas", "Juliana", "Rafael"]
+pessoa.endereco = {
+    bairro: "centro",
+    numero: 42,
+    rua: "logo ali"
+}
+
+Caso se dê um "pessoa" no console, será exibida essas informações:
+
+pessoa {
+    idade: 24,
+
+    nome: "João",
+
+    colegas: [
+        "Lucas",
+        "Juliana",
+        "Rafael"
+    ],
+    
+    endereco: {
+        bairro: "centro",
+        numero: 42,
+        rua: "logo ali"
+    }
+}
