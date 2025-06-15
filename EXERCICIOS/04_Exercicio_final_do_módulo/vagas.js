@@ -5,7 +5,7 @@ function exibirMenu() {
     "VAGAS DE EMPREGO:\n" +
     "1. Listar vagas disponíveis\n" +
     "2. Criar vaga\n" +
-    "3. Visuazar uma vaga\n" +
+    "3. Visualizar uma vaga\n" +
     "4. Inscrever candidato\n" +
     "5. Excluir uma vaga\n" +
     "6. Sair\n"
@@ -15,13 +15,13 @@ function exibirMenu() {
 function criarVaga() {
     let vaga = {}
 
-    vaga.nome = prompt('Informe o nome da Vaga:')
+    vaga.nomeVaga = prompt('Informe o nome da Vaga:')
     vaga.descricao = prompt('Informe a descrição da vaga:')
     vaga.datalimite = prompt('Informe a data limite para essa vaga:')
 
     const confirmacao = confirm(
         'Confirma os dados da vaga?\n\n' +
-        'Nome: ' + vaga.nome + '\n' +
+        'Nome: ' + vaga.nomeVaga + '\n' +
         'Descrição: ' + vaga.descricao + '\n' +
         'Data Limite: ' + vaga.datalimite
     )
@@ -41,11 +41,11 @@ function listarVagas() {
         return
     }
 
-    let mensagem = "Vagas Disponíveis:\n\n"
+    let mensagem = ''
     vagas.forEach(function (vaga, indice) {
-        mensagem += indice + ". " + vaga.nome + " (Candidatos: " + (vaga.candidatos ? vaga.candidatos.length : 0) + ")\n"
+        mensagem += (indice+1) + ". " + vaga.nomeVaga + " (Candidatos: " + (vaga.candidatos ? vaga.candidatos.length : 0) + ")\n"
     })
-    alert(mensagem)
+    return(mensagem)
 }
 
 function InscreverCandidato() {
@@ -55,35 +55,76 @@ function InscreverCandidato() {
     }
 
     const nomeCandidato = prompt('Informe o nome do candidato: ')
-    const indiceVaga = prompt('Informe o índice da Vaga')
+
+    let vagasDisponiveis = listarVagas()
+
+    const indiceVaga = prompt('Informe o índice de uma das seguintes vagas disponíveis:\n' + vagasDisponiveis)
 
     const confirmacao = confirm(
         'Confirma a inscrição?\n\n' +
         'Candidato: ' + nomeCandidato + '\n' +
-        'Vaga: ' + vagas[indiceVaga].nome
+        'Vaga: ' + vagas[indiceVaga-1].nomeVaga
     )
 
     if (confirmacao) {
-        if (vagas[indiceVaga].candidatos) {
-            vagas[indiceVaga].candidatos.push(nomeCandidato)
+        if (vagas[indiceVaga-1].candidatos) {
+            vagas[indiceVaga-1].candidatos.push(nomeCandidato)
         } else {
-            vagas[indiceVaga].candidatos = []
-            vagas[indiceVaga].candidatos.push(nomeCandidato)
+            vagas[indiceVaga-1].candidatos = []
+            vagas[indiceVaga-1].candidatos.push(nomeCandidato)
         }
         
-        alert(nomeCandidato + ' foi inscrito com sucesso na vaga para ' + vagas[indiceVaga].nome + ' com sucesso!')
+        alert(nomeCandidato + ' foi inscrito com sucesso na vaga para ' + vagas[indiceVaga-1].nomeVaga)
     } else {
         alert('O candidato não foi inscrito!')
     }
 }
 
+function obterNomesCandidatos(indiceVaga) {
+    const vaga = vagas[indiceVaga - 1]
+    if (!vaga.candidatos || vaga.candidatos.length === 0) {
+        return 'Nenhum candidato inscrito.'
+    }
+
+    return vaga.candidatos.join(', ')
+}
+
 function visualizarVaga() {
+    if (vagas.length === 0) {
+        alert("Não há vagas cadastradas.")
+        return
+    }
+
+    let vagasDisponiveis = listarVagas()
     
+    const indiceVaga = prompt('Informe o índice de uma das seguintes vagas disponíveis \n' + vagasDisponiveis)
+    
+    vagas.forEach(function (vaga, indice) {
+        let nomes = obterNomesCandidatos(indiceVaga, indice)
+        let mensagem = 'Informações da Vaga: \n\n' 
+
+        mensagem += 'Indice: ' + indiceVaga + '\n' +
+        'Nome da Vaga: ' + vagas[indiceVaga-1].nomeVaga + '\n' +
+        'Descrição: ' + vagas[indiceVaga-1].descricao + '\n' +
+        'Data Limite: ' + vagas[indiceVaga-1].datalimite + '\n' +
+        'Total de candidatos: ' + vagas[indiceVaga-1].candidatos.length + '\n' +
+        'Nome dos candidatos: ' + nomes
+
+        alert(mensagem)
+    })
 }
 
 
 
 function excluirVaga() {
+     if (vagas.length === 0) {
+        alert("Não há vagas cadastradas.")
+        return
+    }
+
+    let vagasDisponiveis = listarVagas()
+    
+    const indiceVaga = prompt('Informe o índice da vaga que deseja excluir:\n' + vagasDisponiveis)
     
 }
 
@@ -92,7 +133,8 @@ do {
 
     switch (opcao) {
         case "1":
-        listarVagas()
+        const listaVagas = listarVagas()
+        alert("Vagas Disponíveis:\n\n" + listaVagas)
         break
       case "2":
         const novaVaga = criarVaga()
@@ -101,7 +143,7 @@ do {
         }
         break
       case "3":
-        resultado = visualizarVaga()
+        visualizarVaga()
         break
       case "4":
         InscreverCandidato()
