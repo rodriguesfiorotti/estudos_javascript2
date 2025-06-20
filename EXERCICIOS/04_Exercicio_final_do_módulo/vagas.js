@@ -14,6 +14,7 @@ function exibirMenu() {
 
 function criarVaga() {
     let vaga = {}
+    vaga.candidatos = []
 
     vaga.nomeVaga = prompt('Informe o nome da Vaga:')
     vaga.descricao = prompt('Informe a descrição da vaga:')
@@ -43,12 +44,12 @@ function listarVagas() {
 
     let mensagem = ''
     vagas.forEach(function (vaga, indice) {
-        mensagem += (indice+1) + ". " + vaga.nomeVaga + " (Candidatos: " + (vaga.candidatos ? vaga.candidatos.length : 0) + ")\n"
+        mensagem += (indice+1) + ". " + vaga.nomeVaga + " (Candidatos: " + vaga.candidatos.length + ")\n"
     })
     return(mensagem)
 }
 
-function InscreverCandidato() {
+function inscreverCandidato() {
     if (vagas.length === 0) {
         alert("Não há vagas cadastradas.")
         return
@@ -58,31 +59,30 @@ function InscreverCandidato() {
 
     let vagasDisponiveis = listarVagas()
 
-    const indiceVaga = prompt('Informe o índice de uma das seguintes vagas disponíveis:\n' + vagasDisponiveis)
+    const indiceVaga = parseInt(prompt('Informe o índice de uma das seguintes vagas disponíveis:\n' + vagasDisponiveis))
+
+    if (isNaN(indiceVaga) || indiceVaga < 0 || indiceVaga >= vagas.length) {
+        alert("Índice inválido.");
+        return;
+    }
 
     const confirmacao = confirm(
         'Confirma a inscrição?\n\n' +
         'Candidato: ' + nomeCandidato + '\n' +
-        'Vaga: ' + vagas[indiceVaga-1].nomeVaga
+        'Vaga: ' + vagas[indiceVaga].nomeVaga
     )
 
     if (confirmacao) {
-        if (vagas[indiceVaga-1].candidatos) {
-            vagas[indiceVaga-1].candidatos.push(nomeCandidato)
-        } else {
-            vagas[indiceVaga-1].candidatos = []
-            vagas[indiceVaga-1].candidatos.push(nomeCandidato)
-        }
-        
-        alert(nomeCandidato + ' foi inscrito com sucesso na vaga para ' + vagas[indiceVaga-1].nomeVaga)
+        vagas[indiceVaga].candidatos.push(nomeCandidato)
+        alert(nomeCandidato + ' foi inscrito com sucesso na vaga para ' + vagas[indiceVaga].nomeVaga)
     } else {
         alert('O candidato não foi inscrito!')
     }
 }
 
 function obterNomesCandidatos(indiceVaga) {
-    const vaga = vagas[indiceVaga - 1]
-    if (!vaga.candidatos || vaga.candidatos.length === 0) {
+    const vaga = vagas[indiceVaga]
+    if (vaga.candidatos.length === 0) {
         return 'Nenhum candidato inscrito.'
     }
 
@@ -97,21 +97,26 @@ function visualizarVaga() {
 
     let vagasDisponiveis = listarVagas()
     
-    const indiceVaga = prompt('Informe o índice de uma das seguintes vagas disponíveis \n' + vagasDisponiveis)
-    
-    vagas.forEach(function (vaga, indice) {
-        let nomes = obterNomesCandidatos(indiceVaga, indice)
-        let mensagem = 'Informações da Vaga: \n\n' 
+    const indiceVaga = parseInt(prompt('Informe o índice de uma das seguintes vagas disponíveis \n' + vagasDisponiveis))
 
-        mensagem += 'Indice: ' + indiceVaga + '\n' +
-        'Nome da Vaga: ' + vagas[indiceVaga-1].nomeVaga + '\n' +
-        'Descrição: ' + vagas[indiceVaga-1].descricao + '\n' +
-        'Data Limite: ' + vagas[indiceVaga-1].datalimite + '\n' +
-        'Total de candidatos: ' + vagas[indiceVaga-1].candidatos.length + '\n' +
+    if (isNaN(indiceVaga) || indiceVaga < 0 || indiceVaga >= vagas.length) {
+        alert("Índice inválido.");
+        return;
+    }
+    
+    let vaga = vagas[indiceVaga]
+    let nomes = obterNomesCandidatos(indiceVaga)
+
+    let mensagem = 'Informações da Vaga: \n\n' +
+        'Índice: ' + (indiceVaga + 1) + '\n' +
+        'Nome da Vaga: ' + vaga.nomeVaga + '\n' +
+        'Descrição: ' + vaga.descricao + '\n' +
+        'Data Limite: ' + vaga.datalimite + '\n' +
+        'Total de candidatos: ' + vaga.candidatos.length + '\n' +
         'Nome dos candidatos: ' + nomes
 
-        alert(mensagem)
-    })
+    alert(mensagem)
+    
 }
 
 
@@ -124,9 +129,19 @@ function excluirVaga() {
 
     let vagasDisponiveis = listarVagas()
     
-    const indiceVaga = prompt('Informe o índice da vaga que deseja excluir:\n' + vagasDisponiveis)
-    
+    const indiceVaga = parseInt(prompt('Informe o índice da vaga que deseja excluir:\n' + vagasDisponiveis), 10) - 1
+
+    if (isNaN(indiceVaga) || indiceVaga < 0 || indiceVaga >= vagas.length) {
+        alert("Índice inválido.");
+        return;
+    }
+
+    let vagaRemovida = vagas.splice(indiceVaga, 1)[0]
+
+    alert('A vaga para ' + vagaRemovida.nomeVaga + ' foi removida com sucesso!')
 }
+
+let opcao
 
 do {
     opcao = exibirMenu()
@@ -134,7 +149,9 @@ do {
     switch (opcao) {
         case "1":
         const listaVagas = listarVagas()
-        alert("Vagas Disponíveis:\n\n" + listaVagas)
+        if (listaVagas) {
+            alert("Vagas Disponíveis:\n\n" + listaVagas)
+        }
         break
       case "2":
         const novaVaga = criarVaga()
@@ -146,10 +163,10 @@ do {
         visualizarVaga()
         break
       case "4":
-        InscreverCandidato()
+        inscreverCandidato()
         break
       case "5":
-        resultado = excluirVaga()
+        excluirVaga()
         break
       case "6":
         alert("Saindo...")
